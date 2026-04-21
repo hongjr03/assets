@@ -1,0 +1,61 @@
+name: Release ZhongYi Fonts
+
+on:
+  push:
+    branches:
+      - zhongyi-fonts-mirror
+    paths:
+      - fonts/zhongyi/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare tag
+        id: prep
+        shell: bash
+        run: |
+          set -euo pipefail
+          SHORT_SHA="$(git rev-parse --short=12 "$GITHUB_SHA")"
+          TAG="zhongyi-${SHORT_SHA}"
+
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag
+        if: steps.prep.outputs.exists == 'false'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.prep.outputs.tag }}" "$GITHUB_SHA" -m "ZhongYi fonts release for ${GITHUB_SHA}"
+          git push origin "${{ steps.prep.outputs.tag }}"
+
+      - name: Create GitHub release
+        if: steps.prep.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.prep.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ZhongYi Fonts ${{ steps.prep.outputs.tag }}
+          generate_release_notes: true
+          body: |
+            Automated release for changes detected in fonts/zhongyi on branch zhongyi-fonts-mirror.
+
+            Source branch: zhongyi-fonts-mirror
+            Source commit: ${{ github.sha }}
