@@ -1,4 +1,4 @@
-# General Chinese Thesis Fonts Mirror
+# CN Thesis Fonts Mirror
 
 This folder mirrors common Chinese thesis fonts copied from:
 

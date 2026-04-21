@@ -1,11 +1,11 @@
-name: Release General Chinese Thesis Fonts
+name: Release CN Thesis Fonts
 
 on:
   push:
     branches:
-      - general-chinese-thesis-fonts
+      - cn-thesis-fonts
     paths:
-      - fonts/zhongyi/**
+      - fonts/cn-thesis-fonts/**
   workflow_dispatch:
 
 permissions:
@@ -26,7 +26,7 @@ jobs:
         run: |
           set -euo pipefail
           SHORT_SHA="$(git rev-parse --short=12 "$GITHUB_SHA")"
-          TAG="general-chinese-thesis-fonts-${SHORT_SHA}"
+          TAG="cn-thesis-fonts-${SHORT_SHA}"
 
           if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ steps.prep.outputs.tag }}" "$GITHUB_SHA" -m "General Chinese thesis fonts release for ${GITHUB_SHA}"
+          git tag -a "${{ steps.prep.outputs.tag }}" "$GITHUB_SHA" -m "CN thesis fonts release for ${GITHUB_SHA}"
           git push origin "${{ steps.prep.outputs.tag }}"
 
       - name: Create GitHub release
@@ -52,10 +52,10 @@ jobs:
         with:
           tag_name: ${{ steps.prep.outputs.tag }}
           target_commitish: ${{ github.sha }}
-          name: General Chinese Thesis Fonts ${{ steps.prep.outputs.tag }}
+          name: CN Thesis Fonts ${{ steps.prep.outputs.tag }}
           generate_release_notes: true
           body: |
-            Automated release for changes detected in fonts/zhongyi on branch general-chinese-thesis-fonts.
+            Automated release for changes detected in fonts/cn-thesis-fonts on branch cn-thesis-fonts.
 
-            Source branch: general-chinese-thesis-fonts
+            Source branch: cn-thesis-fonts
             Source commit: ${{ github.sha }}
