@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - cn-thesis-fonts
-    paths:
-      - fonts/cn-thesis-fonts/**
   workflow_dispatch:
 
 permissions:
@@ -26,18 +24,11 @@ jobs:
         run: |
           set -euo pipefail
           SHORT_SHA="$(git rev-parse --short=12 "$GITHUB_SHA")"
-          TAG="cn-thesis-fonts-${SHORT_SHA}"
-
-          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
-            echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "exists=false" >> "$GITHUB_OUTPUT"
-          fi
+          TAG="cn-thesis-fonts-${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}-${SHORT_SHA}"
 
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
 
       - name: Create tag
-        if: steps.prep.outputs.exists == 'false'
         shell: bash
         run: |
           set -euo pipefail
@@ -47,7 +38,6 @@ jobs:
           git push origin "${{ steps.prep.outputs.tag }}"
 
       - name: Package font assets
-        if: steps.prep.outputs.exists == 'false'
         shell: bash
         run: |
           set -euo pipefail
@@ -58,7 +48,6 @@ jobs:
           sha256sum "${ARCHIVE}" > "${ARCHIVE}.sha256"
 
       - name: Create GitHub release
-        if: steps.prep.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.prep.outputs.tag }}
