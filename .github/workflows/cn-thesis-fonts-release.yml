@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - cn-thesis-fonts
+    paths:
+      - fonts/cn-thesis-fonts/**
   workflow_dispatch:
 
 permissions:
