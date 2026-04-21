@@ -1,8 +1,8 @@
-# ZhongYi Chinese Fonts Mirror
+# General Chinese Thesis Fonts Mirror
 
-This folder mirrors major ZhongYi-related Chinese fonts copied from:
+This folder mirrors common Chinese thesis fonts copied from:
 
-- `C:\Windows\Fonts`
+- C:\Windows\Fonts
 
 Included files:
 
@@ -12,3 +12,7 @@ Included files:
 - simhei.ttf
 - simkai.ttf
 - simfang.ttf
+- times.ttf
+- timesbd.ttf
+- timesbi.ttf
+- timesi.ttf
